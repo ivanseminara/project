@@ -1,0 +1,12 @@
+*.[oa]
+*.~
+
+lowrisc-chip/riscv/bin/*
+lowrisc-chip/riscv/lib/*
+lowrisc-chip/riscv/libexec/*
+lowrisc-chip/riscv/tmp-clang/*
+lowrisc-chip/riscv/riscv64-unknown-elf/lib/*
+lowrisc-chip/riscv-llvm/build/*
+lowrisc-chip/riscv-tools/riscv-gnu-toolchain/build/*
+
+

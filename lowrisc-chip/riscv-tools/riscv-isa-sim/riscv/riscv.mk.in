@@ -1,0 +1,62 @@
+get_insn_list = $(shell grep ^DECLARE_INSN $(1) | sed 's/DECLARE_INSN(\(.*\),.*,.*)/\1/')
+get_opcode = $(shell grep ^DECLARE_INSN.*\\\<$(2)\\\> $(1) | sed 's/DECLARE_INSN(.*,\(.*\),.*)/\1/')
+
+riscv_subproject_deps = \
+	softfloat \
+
+riscv_install_prog_srcs = \
+
+riscv_hdrs = \
+	htif.h \
+	common.h \
+	decode.h \
+	disasm.h \
+	mmu.h \
+	processor.h \
+	sim.h \
+	trap.h \
+	encoding.h \
+	cachesim.h \
+	memtracer.h \
+	extension.h \
+	rocc.h \
+	insn_template.h \
+	mulhi.h \
+
+riscv_precompiled_hdrs = \
+	insn_template.h \
+
+riscv_srcs = \
+	htif.cc \
+	processor.cc \
+	sim.cc \
+	interactive.cc \
+	trap.cc \
+	cachesim.cc \
+	mmu.cc \
+	disasm.cc \
+	extension.cc \
+	extensions.cc \
+	rocc.cc \
+	regnames.cc \
+	$(riscv_gen_srcs) \
+
+riscv_test_srcs =
+
+riscv_gen_hdrs = \
+	icache.h \
+
+riscv_gen_srcs = \
+	$(addsuffix .cc, $(call get_insn_list,$(src_dir)/riscv/encoding.h))
+
+icache_entries := `grep "ICACHE_ENTRIES =" $(src_dir)/riscv/mmu.h | sed 's/.* = \(.*\);/\1/'`
+
+icache.h: mmu.h
+	$(src_dir)/riscv/gen_icache $(icache_entries) > $@.tmp
+	mv $@.tmp $@
+
+$(riscv_gen_srcs): %.cc: insns/%.h insn_template.cc
+	sed 's/NAME/$(subst .cc,,$@)/' $(src_dir)/riscv/insn_template.cc | sed 's/OPCODE/$(call get_opcode,$(src_dir)/riscv/encoding.h,$(subst .cc,,$@))/' > $@
+
+riscv_junk = \
+	$(riscv_gen_srcs) \

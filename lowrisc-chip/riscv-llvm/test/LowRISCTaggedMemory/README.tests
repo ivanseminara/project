@@ -1,0 +1,8 @@
+Tests for tagged memory-based code pointer protection
+-----------------------------------------------------
+
+MemcpyEtc: Tests for memcpy and memmove (both the compiler and the libc).
+
+StackProtection: Tests LLVM code to protect spilled variables including return address.
+
+VPtrTagging: Tests protection of C++ virtual pointers.
